@@ -22,6 +22,12 @@ dist/
 # Maven
 target/
 dist/
+.mvn/
+mvnw*
+HELP.md
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
 # JetBrains IDE
 .idea/
@@ -47,3 +53,34 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### System files ###
+.attach*
