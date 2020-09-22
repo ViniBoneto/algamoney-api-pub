@@ -28,6 +28,12 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- A partir do Spring Boot 2.3 nós precisamos adicionar explicitamente a seguinte dependência: -->
+		<dependency> 
+		  <groupId>org.springframework.boot</groupId> 
+		  <artifactId>spring-boot-starter-validation</artifactId> 
+		</dependency>		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -57,7 +63,17 @@
 		<dependency>
 		    <groupId>org.flywaydb</groupId>
 		    <artifactId>flyway-core</artifactId>
-		</dependency>		
+		</dependency>	
+
+		<!-- Javax validation deveria ter sido baixada e configurada juntamente com o spring-boot-starter-data-jpa. 
+			Por algum motivo, não veio. Estou referenciando-a à parte aqui.
+			
+			OBS: Ao final, isto não foi necessário (Vide spring-boot-starter-validation). -->
+		<!-- <dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		    <version>${javax-validation.version}</version>
+		</dependency> -->
 	</dependencies>
 
 	<build>
