@@ -1,14 +1,15 @@
 package com.example.algamoney.api.resource;
 
-import java.net.URI;
+//import java.net.URI;
 import java.util.List;
-import java.util.Optional;
+//import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.context.ApplicationEventPublisher;
+//import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,20 +17,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+//import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+//import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.model.Categoria;
 import com.example.algamoney.api.repository.CategoriaRepository;
 
-@SuppressWarnings("unused")
+/*@SuppressWarnings("unused")*/
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaResource {
 
 	@Autowired
 	private CategoriaRepository categRep;
+	
+	@Autowired
+	private ApplicationEventPublisher pub;
 	
 	@GetMapping
 	public /*ResponseEntity<?>*/ List<Categoria> listar() {
@@ -60,9 +65,14 @@ public class CategoriaResource {
 	public /*void*/ ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categ, HttpServletResponse resp) {
 		Categoria categSalva = categRep.save(categ);
 		
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}")
-				.buildAndExpand(categSalva.getCodigo()).toUri();
-		resp.setHeader("Location", uri.toASCIIString());
+		/*
+		 * URI uri =
+		 * ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}")
+		 * .buildAndExpand(categSalva.getCodigo()).toUri(); resp.setHeader("Location",
+		 * uri.toASCIIString());
+		 */
+		
+		pub.publishEvent(new RecursoCriadoEvent(this, resp, categSalva.getCodigo()));
 		
 		/* É considerada boa prática de prog retornar o objeto dps de salvo, pois ele pode ter sido 
 		 *  atualizado c/ outros atributos calculados no serv (neste caso, o ID), p/ que o usuário 
@@ -71,7 +81,7 @@ public class CategoriaResource {
 		 *  Como abaixo já será criado uma resposta c/ status 201 (CREATED), a anotação de método
 		 *   @ResponseStatus(HttpStatus.CREATED) pode ser comentada. 
 		 */
-		return ResponseEntity.created(uri).body(categSalva);
+		return ResponseEntity.status(HttpStatus.CREATED).body(categSalva);
 		
 	}
 	
