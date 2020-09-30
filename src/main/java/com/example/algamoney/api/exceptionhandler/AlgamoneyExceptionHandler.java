@@ -3,6 +3,7 @@ package com.example.algamoney.api.exceptionhandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -32,7 +33,10 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
 		String msgUsr = msgSrc.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-		String msgDev = ex.getCause().toString();
+//		String msgDev = ex.getCause() != null ? ex.getCause().toString() : ex.toString();
+		
+		//Usaremos o mesmo código utilizado na aula, porém fica uma dica para melhorar a legibilidade: Optional!
+		String msgDev = Optional.ofNullable( ex.getCause() ).orElse( ex ).toString();
 		List<Erro> erros = Arrays.asList(new Erro(msgUsr, msgDev));
 		
 		return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
