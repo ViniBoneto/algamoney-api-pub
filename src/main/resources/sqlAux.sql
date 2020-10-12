@@ -24,3 +24,10 @@ INSERT INTO categoria(nome) VALUES ('Farmácia');
 INSERT INTO categoria(nome) VALUES ('Outros');
 
 SELECT * FROM pessoa;
+
+DROP TABLE lancamento; /* Necessário p/ corrigir merd@ (execução ñ intencional script V03) */
+
+INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, bairro, cep, cidade, estado) VALUES ('Major Tom', true, 'E. Street SW', '300', 'Suite 5R30', null, '358-0001', 'Washington', 'DC');
+INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, bairro, cep, cidade, estado) VALUES ('Patinhas McPato', true, 'Elm Street', '1000', null, null, '123-4567', 'Patópolis', null);
+
+SELECT * FROM lancamento;
