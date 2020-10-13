@@ -65,6 +65,11 @@
 		    <artifactId>flyway-core</artifactId>
 		</dependency>	
 
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		</dependency>		
+
 		<!-- Javax validation deveria ter sido baixada e configurada juntamente com o spring-boot-starter-data-jpa. 
 			Por algum motivo, não veio. Estou referenciando-a à parte aqui.
 			
