@@ -30,6 +30,10 @@ DROP TABLE lancamento; /* Necessário p/ corrigir merd@ (execução ñ intencion
 INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, bairro, cep, cidade, estado) VALUES ('Major Tom', true, 'E. Street SW', '300', 'Suite 5R30', null, '358-0001', 'Washington', 'DC');
 INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, bairro, cep, cidade, estado) VALUES ('Patinhas McPato', true, 'Elm Street', '1000', null, null, '123-4567', 'Patópolis', null);
 
-SELECT * FROM lancamento;
+SELECT * FROM lancamento
+WHERE data_vencimento >= '2017-06-10';
 
 SELECT codigo, descricao, data_vencimento FROM lancamento ORDER BY data_vencimento DESC;
+
+SELECT count(*) as 'total lançamentos' FROM lancamento
+WHERE data_vencimento >= '2017-06-10';

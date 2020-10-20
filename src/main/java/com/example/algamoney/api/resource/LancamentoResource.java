@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,8 +56,8 @@ public class LancamentoResource {
 */
 	//Mudando o handler do método GET de listar() p/ pesquisar(), p/ usar filtro de query c/ metamodel
 	@GetMapping
-	public List<Lancamento> pesquisar(LancamentoFilter lancaFiltro) {
-		return lancaRep.filtrar(lancaFiltro);
+	public /*List*/ Page<Lancamento> pesquisar(LancamentoFilter lancaFiltro, Pageable pageable) {
+		return lancaRep.filtrar(lancaFiltro, pageable);
 	}
 	
 	@GetMapping("/{codigo}")
