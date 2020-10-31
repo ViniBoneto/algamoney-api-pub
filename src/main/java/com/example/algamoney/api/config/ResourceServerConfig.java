@@ -1,5 +1,6 @@
 package com.example.algamoney.api.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import com.fasterxml.jackson.databind.cfg.ConfigFeature;
@@ -16,13 +20,20 @@ import com.fasterxml.jackson.databind.cfg.ConfigFeature;
 /* Teoricamente desnecessário colocar a anotação @Configuration abaixo, pois a anotação @EnableWebSecurity já 
  * 	contém uma anotação @Configuration embutida em si. No entanto, o autor do tutorial optou por essa redundância, 
  *  para deixar frisado que esta é uma classe de configuração. 
+ *
+ *
+ * Aula 6.3: Renomear cls de SecurityConfig p/ ResourceServerConfig e fazê-la estender cls ResourceServerConfigurerAdapter,
+ *  em vez de WebSecurityConfigurerAdapter (c/ alterações em métodos necessárias). Isso tudo para que esta cls passe a
+ *  ter o papel do Resource Server no protocolo OAuth2. Tb adicionar a anotação @EnableResourceServer.
  */
 @Configuration  
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableResourceServer
+public class /* SecurityConfig */ ResourceServerConfig extends /* WebSecurityConfigurerAdapter */ ResourceServerConfigurerAdapter {
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	/* @Override */
+	@Autowired
+	public /* protected */ void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.inMemoryAuthentication()
 		/* Necessário incluir um password encoder (ñ previsto no tutorial) p/ corrigir o erro aqui apontado:
 		 	https://www.programmersought.com/article/5945623551/ 
@@ -36,19 +47,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		 * 
 		 * Para este caso, podemos passar entre chaves o ID do Encoder que desejamos utilizar, como a senha não está criptografada, 
 		 * vamos utilizar o {noop}. Caso nossa senha estivesse criptografa com BCrypt (por exemplo), poderíamos utilizar {bcrypt}
+		 * 
+		 * OBS: Na aula 6.3 vamos mudar a estratégia e usar o método OAuthSecurityConfig.passwordEncoder(), para obter o encoder,  
+		 * 	em vez de passar entre chaves o ID do Encoder que desejamos utilizar. 
 		 */
-			.withUser("admin").password("{noop}admin").roles("ROLE");
+				.withUser("admin")/* .password("{noop}admin") */.password("admin").roles("ROLE");
 	}
 	
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	public /* protected */ void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 				.antMatchers("/categorias").permitAll() //Indica que requisições à URL de categorias será permitida a todos
 				.anyRequest().authenticated() //Indica que d+ requisições a URLs serão permitidas só a usuários autenticados
 				.and()
-			.httpBasic().and() //Usa autenticação HTTP Basic
+//			.httpBasic().and() //Usa autenticação HTTP Basic
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and() //Não usa Sessão HTTP (requisições não terão estado)
 			.csrf().disable(); //Desabilita suporte a CSRF (Cross-site request forgery)
+	}
+	
+	@Override
+	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+		resources.stateless(true);
 	}
 	
 	/*

@@ -95,6 +95,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		
+		<!-- Adicionando módulo p/ poder implementar o protocolo de segurança OAuth2. 
+			
+			 OBS: Para o pom, iremos adicionar a mesma dependência mostrada na aula, porém precisaremos definir 
+			 a versão, que neste momento é a 2.3.5.RELEASE	-->
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+			<version>2.3.5.RELEASE</version>
+		</dependency>
 	</dependencies>
 
 	<build>
