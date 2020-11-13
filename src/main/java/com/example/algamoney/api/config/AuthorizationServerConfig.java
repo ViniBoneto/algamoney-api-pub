@@ -27,14 +27,18 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 			.withClient("angular") //Client ID
 			.secret("@ngul@r0") //Client secret
 			.scopes("read", "write") //Escopo da permissão
-			.authorizedGrantTypes("password") //Grant Type: Resource Owner Password Credentials
-			.accessTokenValiditySeconds(1800); //Tempo p/ expiração do token: 1800 / 60 = 30 mins 
+			.authorizedGrantTypes("password", "refresh_token") /* Grant Type: Resource Owner Password Credentials.
+																Aula 6.6: Adicionado grant type p/ implementação refresh token */
+//			.accessTokenValiditySeconds(1800); //Tempo p/ expiração do token: 1800 / 60 = 30 mins 
+			.accessTokenValiditySeconds(20) //Aula 6.6: alteração tempo expiração access token p/ 20 s, p/ testar refresh token 
+			.refreshTokenValiditySeconds(3600 * 24); //Aula 6.6: Refresh token expira em 24 hrs
 	}
 	
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.tokenStore(tokenStore())
 			.accessTokenConverter(accessTokenConverter())
+			.reuseRefreshTokens(false) //Qdo novo access token for requisitado p/ refresh token, um novo deste será gerado (uma app logada ñ expirará)
 			.authenticationManager(authMngr);
 	}
 
