@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 //import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,17 @@ import com.example.algamoney.api.model.Categoria;
 import com.example.algamoney.api.repository.CategoriaRepository;
 
 /*@SuppressWarnings("unused")*/
+/* 
+ * Permissão de CORS no nível da classe: Serão permitidas requisições CORS p/ todos os métodos 
+ * 	de categoria, p/ a origem http://localhost:8000. O cache de preflight (período em q uma nova 
+ * 	req preflight ñ será enviada) é de 10 segs.   
+ * 
+ *  OBS: Infelizmente, conforme explicado na aula 6.9, as funcionalidades de CORS embutidas no Spring ainda
+ *  	não trabalham bem com autenticação do Spring security oauth 2. Por isso elas não poderão ser usadas,
+ *  	preferindo-se a solução alternativa mostrada na aula 6.10. Elas foram apenas mostradas por curiosidade,
+ *  	para conhecimento, mas depois removidas (comentadas).  
+ * */
+//@CrossOrigin(maxAge = 10, origins = {"http://localhost:8000"})
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaResource {
@@ -36,6 +48,17 @@ public class CategoriaResource {
 	@Autowired
 	private ApplicationEventPublisher pub;
 	
+	/* 
+	 * Permissão de CORS no nível do método: Serão permitidas requisições CORS p/ listagem de
+	 * 	categoria (GET http://localhost:8080/categorias), p/ a origem http://localhost:8000.
+	 * 	O cache de preflight (período em q uma nova req preflight ñ será enviada) é de 10 segs.    
+	 * 
+	 *  OBS: Infelizmente, conforme explicado na aula 6.9, as funcionalidades de CORS embutidas no Spring ainda
+	 *  	não trabalham bem com autenticação do Spring security oauth 2. Por isso elas não poderão ser usadas,
+	 *  	preferindo-se a solução alternativa mostrada na aula 6.10. Elas foram apenas mostradas por curiosidade,
+	 *  	para conhecimento, mas depois removidas (comentadas). 
+	 * */
+//	@CrossOrigin(maxAge = 10, origins = {"http://localhost:8000"})
 	@GetMapping
 	public /*ResponseEntity<?>*/ List<Categoria> listar() {
 		return categRep.findAll();

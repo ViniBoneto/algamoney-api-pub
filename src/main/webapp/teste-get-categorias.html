@@ -1,0 +1,27 @@
+<html>
+<body>
+	<button onclick="buscar()">Buscar categorias</button>
+	
+	<script>
+		function exibirResposta() {
+			console.log(this.responseText);
+		}
+		
+		function buscar() {
+			var xhr = new XMLHttpRequest();
+			xhr.addEventListener("load", exibirResposta);
+			xhr.open("GET", "http://localhost:8080/categorias");
+			/* 
+				Header "coringa" p/ forçar sempre uma nova req e cache ñ funcionar. 
+			
+				Obs: A partir da aula 6.10, este header ñ será mais usado e nem permitido 
+				(ñ constará no header Access-Control-Allow-Headers, adicionado à resposta 
+				pelo filtro).
+			*/
+			//xhr.setRequestHeader("HEADER1", "VALOR");
+			
+			xhr.send();
+		}
+	</script>
+</body>
+</html>
