@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -20,12 +21,20 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Autowired
 	private AuthenticationManager authMngr;
+
+	/* Aula 6.11: Anteriormente fazíamos referência à UserDetailsService em nosso ResourceServerConfig. Agora iremos trazer essa referência 
+	 * 	para o AuthorizationServerConfig */
+	@Autowired
+	private UserDetailsService usrDetailsServ;
 	
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
 			.withClient("angular") //Client ID
-			.secret("@ngul@r0") //Client secret
+//			.secret("@ngul@r0") //Client secret
+			/* Aula 6.11: Iremos alterar a secret do nosso cliente angular para que ela seja encodada com BCrypt, para isso podemos usar a classe utilitária 
+			 * 	GeradorSenha, inserindo o valor @ngul@r0 para ser encodado. */
+			.secret("$2a$10$3/UlliW2Yc5bO7vknevx6eNPu0qpI.Z57oRuL2wJP0FDHtq9h2Gbe") //Client secret.
 			.scopes("read", "write") //Escopo da permissão
 			.authorizedGrantTypes("password", "refresh_token") /* Grant Type: Resource Owner Password Credentials.
 																Aula 6.6: Adicionado grant type p/ implementação refresh token */
@@ -39,6 +48,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		endpoints.tokenStore(tokenStore())
 			.accessTokenConverter(accessTokenConverter())
 			.reuseRefreshTokens(false) //Qdo novo access token for requisitado p/ refresh token, um novo deste será gerado (uma app logada ñ expirará)
+			/* Aula 6.11: Anteriormente fazíamos referência à UserDetailsService em nosso ResourceServerConfig. Agora iremos trazer essa referência 
+			 * 	para o AuthorizationServerConfig */			
+			.userDetailsService(usrDetailsServ) 
 			.authenticationManager(authMngr);
 	}
 

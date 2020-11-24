@@ -5,7 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -22,19 +23,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *   de encriptação), porém para manter a compatibilidade com a aula, iremos usá-lo. Em aulas posteriores vamos alterar 
  *   essa parte para algo que possa ser usado em produção.
 */
-@SuppressWarnings("deprecation")
+//@SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
 public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	/* Com as atualizações do Spring Security, não há um Bean para AuthenticationManager que é fornecido por padrão pelo Spring, 
+	 * 	para isso precisamos definir esse Bean por conta própria. Para isso, podemos sobrescrever o método authenticationManager() 
+	 * 	da classe WebSecurityConfigurerAdapter */
 	@Bean
 	@Override
 	public /* protected */ AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
 	
+	/* Aula 6.11: Definiremos também aqui, o Bean do nosso passwordEncoder (BCryptPasswordEncoder), que será usado para fazer o decode da 
+	 * 	senha do usuário e da secret do cliente, no lugar do NoOpPasswordEncoder */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return NoOpPasswordEncoder.getInstance();
+//		return NoOpPasswordEncoder.getInstance();
+		return new BCryptPasswordEncoder();
 	}
 }

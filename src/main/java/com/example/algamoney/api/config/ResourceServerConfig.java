@@ -1,21 +1,20 @@
 package com.example.algamoney.api.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+//import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.User;
+//import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+//import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import com.fasterxml.jackson.databind.cfg.ConfigFeature;
 
 /* Teoricamente desnecessário colocar a anotação @Configuration abaixo, pois a anotação @EnableWebSecurity já 
  * 	contém uma anotação @Configuration embutida em si. No entanto, o autor do tutorial optou por essa redundância, 
@@ -25,16 +24,19 @@ import com.fasterxml.jackson.databind.cfg.ConfigFeature;
  * Aula 6.3: Renomear cls de SecurityConfig p/ ResourceServerConfig e fazê-la estender cls ResourceServerConfigurerAdapter,
  *  em vez de WebSecurityConfigurerAdapter (c/ alterações em métodos necessárias). Isso tudo para que esta cls passe a
  *  ter o papel do Resource Server no protocolo OAuth2. Tb adicionar a anotação @EnableResourceServer.
+ *  
+ * Aula 6.11: Nesta classe sobrescrevemos um novo método configure para referenciar o nosso UserDetailsService, não será mais necessário. 
+ *  Também iremos remover a anotação @EnableWebSecurity. 
  */
 @Configuration  
-@EnableWebSecurity
+//@EnableWebSecurity
 @EnableResourceServer
 public class /* SecurityConfig */ ResourceServerConfig extends /* WebSecurityConfigurerAdapter */ ResourceServerConfigurerAdapter {
 
 	/* @Override */
-	@Autowired
-	public /* protected */ void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
+//	@Autowired
+//	public /* protected */ void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.inMemoryAuthentication()
 		/* Necessário incluir um password encoder (ñ previsto no tutorial) p/ corrigir o erro aqui apontado:
 		 	https://www.programmersought.com/article/5945623551/ 
 		 	
@@ -51,8 +53,8 @@ public class /* SecurityConfig */ ResourceServerConfig extends /* WebSecurityCon
 		 * OBS: Na aula 6.3 vamos mudar a estratégia e usar o método OAuthSecurityConfig.passwordEncoder(), para obter o encoder,  
 		 * 	em vez de passar entre chaves o ID do Encoder que desejamos utilizar. 
 		 */
-				.withUser("admin")/* .password("{noop}admin") */.password("admin").roles("ROLE");
-	}
+//				.withUser("admin")/* .password("{noop}admin") */.password("admin").roles("ROLE");
+//	}
 	
 	@Override
 	public /* protected */ void configure(HttpSecurity http) throws Exception {

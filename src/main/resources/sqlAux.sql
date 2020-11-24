@@ -37,3 +37,16 @@ SELECT codigo, descricao, data_vencimento FROM lancamento ORDER BY data_vencimen
 
 SELECT count(*) as 'total lançamentos' FROM lancamento
 WHERE data_vencimento >= '2017-06-10';
+
+/* Consertando o erro da migração V04__criar_e_registrar_usuarios_e_permissoes
+DELETE FROM flyway_schema_history WHERE installed_rank = 4; 
+DROP TABLE usuario_permissao;
+DROP TABLE usuario;
+DROP TABLE permissao; 
+*/
+
+SELECT * FROM usuario;
+
+SELECT * FROM permissao;
+
+SELECT * FROM usuario_permissao;
