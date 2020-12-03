@@ -2,7 +2,7 @@ package com.example.algamoney.api.resource;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+//import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,11 +57,13 @@ public class LancamentoResource {
 */
 	//Mudando o handler do método GET de listar() p/ pesquisar(), p/ usar filtro de query c/ metamodel
 	@GetMapping
+	@PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public /*List*/ Page<Lancamento> pesquisar(LancamentoFilter lancaFiltro, Pageable pageable) {
 		return lancaRep.filtrar(lancaFiltro, pageable);
 	}
 	
 	@GetMapping("/{codigo}")
+	@PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public ResponseEntity<?> buscarPorCodigo(@PathVariable Long codigo) {
 //		Implementando retorno 404 usando java.util.Optional<T>.map()
 		return this.lancaRep.findById(codigo).map( lancamento -> ResponseEntity.ok(lancamento) )
@@ -68,6 +71,7 @@ public class LancamentoResource {
 	}
 	
 	@PostMapping
+	@PreAuthorize(value = "hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
 	public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lanca, HttpServletResponse resp) {
 		Lancamento lancaSalvo = this.lancaServ.salvar(lanca);
 		
@@ -78,6 +82,7 @@ public class LancamentoResource {
 	
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize(value = "hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
 	public void remover(@PathVariable Long codigo) {
 		lancaRep.deleteById(codigo);
 	}	

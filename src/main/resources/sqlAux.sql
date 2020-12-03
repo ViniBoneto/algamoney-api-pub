@@ -31,7 +31,7 @@ INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, bairro, cep, ci
 INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, bairro, cep, cidade, estado) VALUES ('Patinhas McPato', true, 'Elm Street', '1000', null, null, '123-4567', 'Patópolis', null);
 
 SELECT * FROM lancamento
-WHERE data_vencimento >= '2017-06-10';
+/* WHERE data_vencimento >= '2017-06-10' */;
 
 SELECT codigo, descricao, data_vencimento FROM lancamento ORDER BY data_vencimento DESC;
 

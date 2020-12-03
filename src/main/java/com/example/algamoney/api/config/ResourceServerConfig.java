@@ -1,8 +1,11 @@
 package com.example.algamoney.api.config;
 
+import org.springframework.context.annotation.Bean;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 //import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 //import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 //import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 
@@ -27,10 +31,13 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
  *  
  * Aula 6.11: Nesta classe sobrescrevemos um novo método configure para referenciar o nosso UserDetailsService, não será mais necessário. 
  *  Também iremos remover a anotação @EnableWebSecurity. 
+ *  
+ * Aula 6.12: Adiciona a anotação @EnableGlobalMethodSecurity p/ habilitar o Spring Security global method security. 
  */
 @Configuration  
 //@EnableWebSecurity
 @EnableResourceServer
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class /* SecurityConfig */ ResourceServerConfig extends /* WebSecurityConfigurerAdapter */ ResourceServerConfigurerAdapter {
 
 	/* @Override */
@@ -59,6 +66,11 @@ public class /* SecurityConfig */ ResourceServerConfig extends /* WebSecurityCon
 	@Override
 	public /* protected */ void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
+				/*
+				 * Aula 6.12: Com a adição dos controles de acesso à métodos (c/ @PreAuthorize), a expressão de permissão 
+				 * 	às categorias, abaixo, até perdeu sentido e poderia ser removida, pois o acesso será controlado diretamente
+				 * 	nos métodos da classe CategoriaResource. 
+				 */
 				.antMatchers("/categorias").permitAll() //Indica que requisições à URL de categorias será permitida a todos
 				.anyRequest().authenticated() //Indica que d+ requisições a URLs serão permitidas só a usuários autenticados
 				.and()
@@ -92,4 +104,9 @@ public class /* SecurityConfig */ ResourceServerConfig extends /* WebSecurityCon
 		
 		return manager;
 	} */
+	
+	@Bean
+	public MethodSecurityExpressionHandler createExpressionHandler() {
+		return new OAuth2MethodSecurityExpressionHandler();
+	}
 }

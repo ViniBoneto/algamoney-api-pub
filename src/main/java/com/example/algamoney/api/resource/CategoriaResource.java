@@ -12,7 +12,8 @@ import org.springframework.context.ApplicationEventPublisher;
 //import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,6 +61,13 @@ public class CategoriaResource {
 	 * */
 //	@CrossOrigin(maxAge = 10, origins = {"http://localhost:8000"})
 	@GetMapping
+	/*
+	 * Aula 6.12: hasAuthority() verifica a permissão do usuário (user), enquanto que #oauth2.hasScope() verifica a 
+	 *  permissão (escopo) do cliente (client). Ex: um usuário que tenha permissão de criar categoria, 
+	 *  mas esteja usando um cliente que tem permissão (escopo) apenas de leitura, não conseguirá criar 
+	 *  uma categoria neste contexto.
+	 */
+	@PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
 	public /*ResponseEntity<?>*/ List<Categoria> listar() {
 		return categRep.findAll();
 		
@@ -84,6 +92,7 @@ public class CategoriaResource {
 	}
 	
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
 	/* @ResponseStatus(HttpStatus.CREATED) */
 	public /*void*/ ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categ, HttpServletResponse resp) {
 		Categoria categSalva = categRep.save(categ);
@@ -109,6 +118,7 @@ public class CategoriaResource {
 	}
 	
 	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
 	public /*Categoria*/ResponseEntity<?> buscarPorCodigo(@PathVariable Long codigo) {
 		/*
 		 * Categoria categEx = new Categoria(); categEx.setCodigo(codigo);
