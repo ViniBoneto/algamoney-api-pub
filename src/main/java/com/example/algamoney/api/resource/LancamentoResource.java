@@ -31,6 +31,7 @@ import com.example.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler.Erro
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
+import com.example.algamoney.api.repository.projection.ResumoLancamento;
 import com.example.algamoney.api.service.LancamentoService;
 import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
 
@@ -60,6 +61,13 @@ public class LancamentoResource {
 	@PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public /*List*/ Page<Lancamento> pesquisar(LancamentoFilter lancaFiltro, Pageable pageable) {
 		return lancaRep.filtrar(lancaFiltro, pageable);
+	}
+	
+	//Query param "resumo" é o que diferencia, dentro do método http, se será chaamdo o método listar() ou resumir() 
+	@GetMapping(params = "resumo")
+	@PreAuthorize(value = "hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public Page<ResumoLancamento> resumir(LancamentoFilter lancaFiltro, Pageable pageable) {
+		return lancaRep.resumir(lancaFiltro, pageable);
 	}
 	
 	@GetMapping("/{codigo}")
