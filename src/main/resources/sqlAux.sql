@@ -50,3 +50,12 @@ SELECT * FROM usuario;
 SELECT * FROM permissao;
 
 SELECT * FROM usuario_permissao;
+
+### Criando insercoes em pessoas p/ amb prod bater c/ amb dev ###
+SHOW COLUMNS FROM pessoa;
+
+SET @SQLins= "INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, bairro, cep, cidade, estado) VALUES (";
+#SELECT @SQLins + CAST(codigo AS CHAR(10)) + ", '" + nome + "', " + CAST(ativo AS CHAR(1)) + ", '" + logradouro + "', '" + numero + "', '" + complemento + "', '" + bairro + "', '" + cep + "', '" + cidade + "', '" + estado  + "')" SQlIns FROM pessoa;
+
+SELECT CONCAT(@SQLins, "'", nome, "', ", CAST(ativo AS CHAR(1)), ", '", IFNULL(logradouro, "NULL"), "', '", IFNULL(numero, "NULL"), "', '", IFNULL(complemento, "NULL"), "', '", IFNULL(bairro, "NULL"), "', '", IFNULL(cep, "NULL"), "', '", IFNULL(cidade, "NULL"), "', '", IFNULL(estado, "NULL"), "');") SQlIns FROM pessoa;
+
