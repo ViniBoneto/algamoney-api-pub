@@ -29,7 +29,10 @@ public class AppUserDetailsService implements UserDetailsService {
 		Usuario usr = usrOpt.orElseThrow(() -> new UsernameNotFoundException("Usuário ou senha inválido "
 				+ "( Login usuário passado : " + email + " ).") );
 		
-		return new User(email, usr.getSenha(), getPermissoes(usr));
+		/* Aula 7.5: substitui retorno de classe User p/ sua extensão UsuarioSistema, q armazenará tb    
+		 	o obj do tipo Usuario (entidade) */
+//		return new User(email, usr.getSenha(), getPermissoes(usr));
+		return new UsuarioSistema(usr, getPermissoes(usr));
 	}
 
 	private Collection<? extends GrantedAuthority> getPermissoes(Usuario usr) {

@@ -1,5 +1,7 @@
 package com.example.algamoney.api.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +12,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 //import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+
+import com.example.algamoney.api.config.token.CustomTokenEnhancer;
 
 @Configuration
 @EnableAuthorizationServer
@@ -53,8 +59,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+		/* Aula 7.5: Adiciona um TokenEnhancerChain com um CunstomTokenEnhancer ao AuthorizationServerEndpointsConfigurer, p/ poder adicionar info c/ 
+		 * 	nome usuário ao JWT Token */
+		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain(); 
+		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), (JwtAccessTokenConverter) accessTokenConverter()));
+		
 		endpoints.tokenStore(tokenStore())
-			.accessTokenConverter(accessTokenConverter())
+			// Aula 7.5: Ñ há mais necessidade de se passar o AccessTokenConverter diretamente, pois ele será passado no TokenEnhancerChain  
+//			.accessTokenConverter(accessTokenConverter())
+			.tokenEnhancer(tokenEnhancerChain)
 			.reuseRefreshTokens(false) //Qdo novo access token for requisitado p/ refresh token, um novo deste será gerado (uma app logada ñ expirará)
 			/* Aula 6.11: Anteriormente fazíamos referência à UserDetailsService em nosso ResourceServerConfig. Agora iremos trazer essa referência 
 			 * 	para o AuthorizationServerConfig */			
@@ -73,5 +86,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Bean
 	public TokenStore tokenStore() {
 		return new /*InMemoryTokenStore()*/ JwtTokenStore((JwtAccessTokenConverter) accessTokenConverter());
+	}
+
+	// Aula 7.5: Adiciona um TokenEnhancer
+	@Bean
+	public TokenEnhancer tokenEnhancer() {
+		return new CustomTokenEnhancer();
 	}
 }
