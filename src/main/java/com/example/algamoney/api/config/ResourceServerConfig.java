@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 //import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -34,6 +35,7 @@ import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecur
  *  
  * Aula 6.12: Adiciona a anotação @EnableGlobalMethodSecurity p/ habilitar o Spring Security global method security. 
  */
+@Profile("oauth-security") // Aula 7.6: Adicionando condição p/ só instanciar obj desta cls se um dos perfis ativos do spring for oauth-security
 @Configuration  
 //@EnableWebSecurity
 @EnableResourceServer

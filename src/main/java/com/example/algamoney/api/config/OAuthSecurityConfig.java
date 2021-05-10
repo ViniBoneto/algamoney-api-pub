@@ -2,6 +2,7 @@ package com.example.algamoney.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *   essa parte para algo que possa ser usado em produção.
 */
 //@SuppressWarnings("deprecation")
+@Profile("oauth-security") // Aula 7.6: Adicionando condição p/ só instanciar obj desta cls se um dos perfis ativos do spring for oauth-security 
 @Configuration
 @EnableWebSecurity
 public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
