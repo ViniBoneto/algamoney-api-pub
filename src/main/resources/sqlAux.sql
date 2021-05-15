@@ -5,6 +5,9 @@ USE algamoneyapi;
 
 SHOW TABLES;
 
+SHOW WARNINGS; # Usar sempre este cmd p/ exibir os altertas, erros e avisos da transação
+SHOW ERRORS; # Usar sempre este cmd p/ exibir apenas os erros da transação
+
 SELECT * FROM flyway_schema_history;
 
 SELECT * FROM categoria;
@@ -59,3 +62,5 @@ SET @SQLins= "INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, b
 
 SELECT CONCAT(@SQLins, "'", nome, "', ", CAST(ativo AS CHAR(1)), ", '", IFNULL(logradouro, "NULL"), "', '", IFNULL(numero, "NULL"), "', '", IFNULL(complemento, "NULL"), "', '", IFNULL(bairro, "NULL"), "', '", IFNULL(cep, "NULL"), "', '", IFNULL(cidade, "NULL"), "', '", IFNULL(estado, "NULL"), "');") SQlIns FROM pessoa;
 
+### Validando filtro pessoa (aula 7.6)
+SELECT * FROM pessoa WHERE LOWER(nome) LIKE '%alves%' LIMIT 20;

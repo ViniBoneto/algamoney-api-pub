@@ -9,6 +9,8 @@ import javax.validation.Valid;
 //import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 //import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.repository.PessoaRepository;
+import com.example.algamoney.api.repository.filter.PessoaFilter;
 import com.example.algamoney.api.service.PessoaService;
 
 @RestController
@@ -42,7 +45,14 @@ public class PessoaResource {
 	@Autowired
 	private ApplicationEventPublisher pub;
 	
+	// Aula 7.6: Mudando o handler do método GET de listar() p/ pesquisar(), p/ usar filtro de query c/ metamodel
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
+	public Page<Pessoa> pesquisar(PessoaFilter pessoaFiltro, Pageable pageable) {
+		return pessoaRep.filtrar(pessoaFiltro, pageable);
+	}	
+	
+//	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
 	public List<Pessoa> listar() {
 		return pessoaRep.findAll();
