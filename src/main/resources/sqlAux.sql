@@ -34,7 +34,7 @@ INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, bairro, cep, ci
 INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, bairro, cep, cidade, estado) VALUES ('Patinhas McPato', true, 'Elm Street', '1000', null, null, '123-4567', 'Patópolis', null);
 
 SELECT * FROM lancamento
-/* WHERE data_vencimento >= '2017-06-10' */;
+ WHERE data_vencimento >= '2017-06-10' limit 0, 3;
 
 SELECT codigo, descricao, data_vencimento FROM lancamento ORDER BY data_vencimento DESC;
 
@@ -63,4 +63,4 @@ SET @SQLins= "INSERT INTO pessoa(nome, ativo, logradouro, numero, complemento, b
 SELECT CONCAT(@SQLins, "'", nome, "', ", CAST(ativo AS CHAR(1)), ", '", IFNULL(logradouro, "NULL"), "', '", IFNULL(numero, "NULL"), "', '", IFNULL(complemento, "NULL"), "', '", IFNULL(bairro, "NULL"), "', '", IFNULL(cep, "NULL"), "', '", IFNULL(cidade, "NULL"), "', '", IFNULL(estado, "NULL"), "');") SQlIns FROM pessoa;
 
 ### Validando filtro pessoa (aula 7.6)
-SELECT * FROM pessoa WHERE LOWER(nome) LIKE '%alves%' LIMIT 20;
+SELECT * FROM pessoa WHERE /*1 = 1*/ LOWER(nome) LIKE '%alves%' LIMIT 9, 3/*20*/;

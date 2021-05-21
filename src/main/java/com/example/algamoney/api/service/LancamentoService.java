@@ -2,6 +2,7 @@ package com.example.algamoney.api.service;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,26 @@ public class LancamentoService {
 		 * 	pessoa inexistente ou inativa, lançar-se uma exceção própria, que informaria mais acuradamente a situação.
 		 */
 		@SuppressWarnings("unused")
-		Pessoa pessoaValida = this.pessoaRep.findById( lanca.getPessoa().getCodigo() ).filter( (pessoa) -> !pessoa.isInativo() ).orElseThrow( PessoaInexistenteOuInativaException::new );
+		Pessoa pessoaValida = validarPessoaLancamento(lanca);
 		
 		return lancaRep.save(lanca);
 	}
 
+	// Aula 7.9. Desafio: Atualização de lançamento
+	public Lancamento atualizar(Long codigo, Lancamento lanca) {
+		Lancamento lancaSalvo = lancaRep.findById(codigo).orElseThrow( IllegalArgumentException::new );
+		
+		if( !lanca.getPessoa().equals( lancaSalvo.getPessoa() ) ) {
+			@SuppressWarnings("unused")
+			Pessoa pessoaValida = validarPessoaLancamento(lanca);
+		}
+
+		BeanUtils.copyProperties(lanca, lancaSalvo, "codigo");
+		
+		return lancaRep.save(lancaSalvo);
+	}
+
+	private Pessoa validarPessoaLancamento(Lancamento lanca) {
+		return this.pessoaRep.findById( lanca.getPessoa().getCodigo() ).filter( (pessoa) -> !pessoa.isInativo() ).orElseThrow( PessoaInexistenteOuInativaException::new );
+	}
 }

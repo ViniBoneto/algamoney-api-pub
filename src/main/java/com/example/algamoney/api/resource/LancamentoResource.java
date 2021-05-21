@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -93,6 +94,20 @@ public class LancamentoResource {
 	@PreAuthorize(value = "hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
 	public void remover(@PathVariable Long codigo) {
 		lancaRep.deleteById(codigo);
+	}	
+	
+	// Aula 7.9. Desafio: Atualização de lançamento
+	@PutMapping("/{codigo}")
+	@PreAuthorize(value = "hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+	public ResponseEntity<Lancamento> atualizar(@PathVariable Long codigo, @Valid @RequestBody Lancamento lanca) {
+		try {
+			Lancamento lancaSalvo = this.lancaServ.atualizar(codigo, lanca);
+			
+			return ResponseEntity.ok(lancaSalvo);
+		}
+		catch (IllegalArgumentException iaex) {
+			return ResponseEntity.notFound().build();
+		}
 	}	
 	
 	/*
