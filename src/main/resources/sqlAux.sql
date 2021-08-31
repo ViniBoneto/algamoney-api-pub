@@ -64,3 +64,11 @@ SELECT CONCAT(@SQLins, "'", nome, "', ", CAST(ativo AS CHAR(1)), ", '", IFNULL(l
 
 ### Validando filtro pessoa (aula 7.6)
 SELECT * FROM pessoa WHERE /*1 = 1*/ LOWER(nome) LIKE '%alves%' LIMIT 9, 3/*20*/;
+
+### criando lista fixa de lançamentos p/ serem exibidos em tabela da aula 10.5 ###
+SHOW COLUMNS FROM pessoa;
+SHOW COLUMNS FROM lancamento;
+
+SELECT CONCAT('{ tipo: "', l.tipo, '", descricao: "', l.descricao, '", dataVencimento: "', l.data_vencimento,
+	'", dataPagamento: "', IFNULL(l.data_pagamento, ''), '", pessoa: "', p.nome, ' },') lancamentosObjs
+FROM lancamento l inner join pessoa p on l.codigo_pessoa = p.codigo;
