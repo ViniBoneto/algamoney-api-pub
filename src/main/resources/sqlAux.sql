@@ -69,6 +69,7 @@ SELECT * FROM pessoa WHERE /*1 = 1*/ LOWER(nome) LIKE '%alves%' LIMIT 9, 3/*20*/
 SHOW COLUMNS FROM pessoa;
 SHOW COLUMNS FROM lancamento;
 
-SELECT CONCAT('{ tipo: "', l.tipo, '", descricao: "', l.descricao, '", dataVencimento: "', l.data_vencimento,
-	'", dataPagamento: "', IFNULL(l.data_pagamento, ''), '", pessoa: "', p.nome, ' },') lancamentosObjs
+SELECT CONCAT('{ tipo: "', l.tipo, '", descricao: "', l.descricao, '", dataVencimento: "', DATE_FORMAT(l.data_vencimento, '%d/%m/%Y'), 
+	'", dataPagamento: "', IFNULL( DATE_FORMAT(l.data_pagamento, '%d/%m/%Y'), 'null' ), '", valor: ', l.valor, ', pessoa: "', 
+    p.nome, '" },') lancamentosObjs
 FROM lancamento l inner join pessoa p on l.codigo_pessoa = p.codigo;
