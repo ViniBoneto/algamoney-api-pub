@@ -73,3 +73,10 @@ SELECT CONCAT('{ tipo: "', l.tipo, '", descricao: "', l.descricao, '", dataVenci
 	'", dataPagamento: "', IFNULL( DATE_FORMAT(l.data_pagamento, '%d/%m/%Y'), 'null' ), '", valor: ', l.valor, ', pessoa: "', 
     p.nome, '" },') lancamentosObjs
 FROM lancamento l inner join pessoa p on l.codigo_pessoa = p.codigo;
+
+### criando lista fixa de pessoas p/ serem exibidos em tabela da aula 10.13 ###
+SHOW COLUMNS FROM pessoa;
+
+SELECT CONCAT('{ nome: "', nome, '", cidade: "', IFNULL(cidade, 'null'), '", estado: "', IFNULL(estado, 'null'), '", ativo: ', ativo, ' },') pessoasObjs
+	FROM pessoa p;
+
